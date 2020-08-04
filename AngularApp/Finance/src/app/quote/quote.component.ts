@@ -1,4 +1,5 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { QuoteService, Quote } from './quote.service';
 
 @Component({
@@ -7,7 +8,7 @@ import { QuoteService, Quote } from './quote.service';
   styleUrls: ['./quote.component.css']
 })
 export class QuoteComponent implements OnInit {
-  @ViewChild('symbolInput', { static: false }) symbolInput: ElementRef;
+  quoteForm: FormGroup;
   quote: Quote;
   errorMessage: string;
   isLoading: boolean = false;
@@ -15,23 +16,26 @@ export class QuoteComponent implements OnInit {
   constructor(private quoteService: QuoteService) { }
 
   ngOnInit() {
+    this.quoteForm = new FormGroup({
+      symbol : new FormControl({value: '', disabled: this.isLoading}, Validators.required)
+    });
   }
 
   handleGetQuoteClick() {
     this.errorMessage = null;
     this.isLoading = true;
-    this.quoteService.getQuote(this.symbolInput.nativeElement.value)
+    this.quoteService.getQuote(this.quoteForm.value.symbol)
     .subscribe(
       quote => {
         this.quote = quote;
         this.errorMessage = null;
-        this.isLoading = false;
       },
       error => {
         this.errorMessage = error;
-        this.isLoading = false;
       }
-    );
+    ).add(() => {
+      this.isLoading = false;
+    });
   }
 
 }

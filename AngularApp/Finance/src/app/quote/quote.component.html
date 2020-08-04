@@ -1,18 +1,32 @@
-<div>
+<!-- <div>
    <input #symbolInput type="text" placeholder="Symbol..." [disabled]="isLoading">
    <button type="submit" (click)="handleGetQuoteClick()" [disabled]="isLoading">Get Quote</button>
-</div>
-<div *ngIf="quote && !errorMessage && !isLoading">
-   <dl class="row">
-      <dt class="col-sm-3">Company:</dt>
-      <dd class="col-sm-9">{{ quote.companyName }}</dd>
-      
-      <dt class="col-sm-3">Symbol:</dt>
-      <dd class="col-sm-9">{{ quote.symbol }}</dd>
-      
-      <dt class="col-sm-3">Latest Price:</dt>
-      <dd class="col-sm-9">{{ quote.latestPrice | currency:'USD' }}</dd>
-   </dl>
+</div> -->
+<form [formGroup]="quoteForm" (ngSubmit)="handleGetQuoteClick()" class="form-inline justify-content-center">
+   <div class="form-group m-2">
+      <input type="text" id="symbol" formControlName="symbol" class="form-control"
+         placeholder="Symbol">
+   </div>
+   <button type="submit" class="btn btn-primary m-2" [disabled]="!quoteForm.valid || isLoading">Get Quote</button> 
+</form>
+
+<div *ngIf="quote && !errorMessage && !isLoading" class="text-left">
+   <table class="table table-sm table-borderless text-left">
+      <tbody>
+         <tr>
+            <th scope="row">Company:</th>
+            <td>{{ quote.companyName }}</td>
+         </tr>
+         <tr>
+            <th scope="row">Symbol:</th>
+            <td>{{ quote.symbol }}</td>
+         </tr>
+         <tr>
+            <th scope="row">Latest Price:</th>
+            <td>{{ quote.latestPrice | currency:'USD' }}</td>
+         </tr>
+      </tbody>
+   </table>
 </div>
 <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
    {{ errorMessage }}
