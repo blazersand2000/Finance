@@ -1,1 +1,22 @@
-<p>quote works!</p>
+<div>
+   <input #symbolInput type="text" placeholder="Symbol..." [disabled]="isLoading">
+   <button type="submit" (click)="handleGetQuoteClick()" [disabled]="isLoading">Get Quote</button>
+</div>
+<div *ngIf="quote && !errorMessage && !isLoading">
+   <dl class="row">
+      <dt class="col-sm-3">Company:</dt>
+      <dd class="col-sm-9">{{ quote.companyName }}</dd>
+      
+      <dt class="col-sm-3">Symbol:</dt>
+      <dd class="col-sm-9">{{ quote.symbol }}</dd>
+      
+      <dt class="col-sm-3">Latest Price:</dt>
+      <dd class="col-sm-9">{{ quote.latestPrice | currency:'USD' }}</dd>
+   </dl>
+</div>
+<div *ngIf="errorMessage" class="alert alert-danger" role="alert">
+   {{ errorMessage }}
+</div>
+<div *ngIf="isLoading">
+   <app-loading-spinner></app-loading-spinner>
+</div>

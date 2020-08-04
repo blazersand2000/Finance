@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "..\\my-first-app"
+		},
+		{
+			"path": "AngularApp\\Finance"
+		},
+		{
+			"path": "PythonStarterCode"
+		}
+	],
+	"settings": {}
+}
