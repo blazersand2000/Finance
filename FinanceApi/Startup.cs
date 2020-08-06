@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 using FinanceApi.Data;
 using FinanceApi.Identity;
 using FinanceApi.Repositories;
+using FirebaseAdmin;
+using FirebaseAdmin.Auth;
+using Google.Apis.Auth.OAuth2;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -60,12 +63,15 @@ namespace FinanceApi
                    builder.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyOrigin().AllowAnyHeader();
                 });
          });
+
+         services.AddMvc().AddNewtonsoftJson();
       }
 
       // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
       public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
       {
          app.UseCors();
+
          if (env.IsDevelopment())
          {
             app.UseDeveloperExceptionPage();
@@ -87,6 +93,11 @@ namespace FinanceApi
             var context = serviceScope.ServiceProvider.GetRequiredService<FinanceContext>();
             context.Database.Migrate();
          }
+
+         FirebaseApp.Create(new AppOptions()
+         {
+            Credential = GoogleCredential.FromFile(@"C:\Users\Andrew\Downloads\cs50-finance-9582e-firebase-adminsdk-i9npe-c3f1fe9022.json"),
+         });
 
       }
    }

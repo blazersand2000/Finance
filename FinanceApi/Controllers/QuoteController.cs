@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using FinanceApi.Models.ApiModels;
+using FirebaseAdmin.Auth;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,10 +17,12 @@ namespace FinanceApi.Controllers
    public class QuoteController : ControllerBase
    {
       private readonly IHttpClientFactory _clientFactory;
+      private readonly HttpClient client;
 
       public QuoteController(IHttpClientFactory clientFactory)
       {
          _clientFactory = clientFactory;
+         client = _clientFactory.CreateClient();
       }
 
       // GET: api/Quote/MSFT
@@ -27,7 +30,6 @@ namespace FinanceApi.Controllers
       public async Task<IActionResult> GetAsync(string symbol)
       {
          var request = new HttpRequestMessage(HttpMethod.Get, $"https://cloud-sse.iexapis.com/stable/stock/{symbol}/quote?token=pk_e6e13c11832440cabe357ff621e7f404");
-         var client = _clientFactory.CreateClient();
          var response = await client.SendAsync(request);
 
          if (response.IsSuccessStatusCode)

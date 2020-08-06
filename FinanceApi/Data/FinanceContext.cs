@@ -15,6 +15,6 @@ namespace FinanceApi.Data
     {
     }
 
-    public DbSet<Transaction> Transactions { get; set; }
+    //public DbSet<TransactionResponse> Transactions { get; set; }
   }
 }
