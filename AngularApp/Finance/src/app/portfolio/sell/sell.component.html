@@ -1,0 +1,49 @@
+<form [formGroup]="sellForm" (ngSubmit)="onSubmit()" class="justify-content-center" *ngIf="!errorMessage && !isLoading">
+   
+   <div class="row justify-content-center">
+      <div class="col-3">
+         <div class="form-group my-2">
+            <select class="custom-select form-control my-2" (change)="onChangePosition($event.target.value)"
+               id="position" formControlName="position">
+               <option selected disabled hidden [value]="null"></option>
+               <option *ngFor="let position of positions" [value]="position.symbol">{{ position.symbol.toUpperCase() }}
+               </option>
+            </select>
+            <input type="number" min="1" id="quantity" formControlName="quantity" class="form-control my-2" placeholder="Shares..." [class.is-invalid]="quantity.invalid && (quantity.dirty || quantity.touched)">
+            <span class="form-text" *ngIf="selectedPosition">
+               You own {{ selectedPosition.quantity }} shares of {{ selectedPosition.symbol.toUpperCase() }}.
+            </span>
+         </div>
+      </div>
+   </div>
+
+   <div class="row justify-content-center">
+      <div class="col-auto">
+         <div class="form-group my-2">
+            <div *ngIf="quantity.invalid && (quantity.dirty || quantity.touched)" class="alert alert-danger my-2">
+               <div *ngIf="quantity.errors.min">
+                  Must be a positive number.
+               </div>
+               <div *ngIf="quantity.errors.max">
+                  Must not be greater than the number of shares owned.
+               </div>
+               <div *ngIf="quantity.errors.required">
+                  Number of shares is required.
+               </div>
+               <div *ngIf="quantity.errors.pattern">
+                  Must be an integer.
+               </div>
+            </div>
+         </div>
+         <button type="submit" class="btn btn-primary my-2" [disabled]="!sellForm.valid || isLoading">Sell</button>
+      </div>
+   </div>
+
+</form>
+
+<div *ngIf="errorMessage" class="alert alert-danger" role="alert">
+   {{ errorMessage }}
+</div>
+<div *ngIf="isLoading">
+   <app-loading-spinner></app-loading-spinner>
+</div>

@@ -9,7 +9,9 @@ using FirebaseAdmin;
 using FirebaseAdmin.Auth;
 using Google.Apis.Auth.OAuth2;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +20,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-
+using Newtonsoft.Json;
 
 namespace FinanceApi
 {
@@ -65,16 +67,21 @@ namespace FinanceApi
          });
 
          services.AddMvc().AddNewtonsoftJson();
+
+         services.AddTransient<IMainRepository, MainRepository>();
       }
 
       // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
       public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
       {
+         //https://stackoverflow.com/questions/38630076/asp-net-core-web-api-exception-handling/55166404#55166404
+         app.UseExceptionHandler("/api/error");
+         
          app.UseCors();
 
          if (env.IsDevelopment())
          {
-            app.UseDeveloperExceptionPage();
+            //app.UseDeveloperExceptionPage();
          }
 
          app.UseHttpsRedirection();
@@ -87,6 +94,7 @@ namespace FinanceApi
          {
             endpoints.MapControllers();
          });
+
 
          using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
          {

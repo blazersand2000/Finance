@@ -1,19 +1,19 @@
-<form [formGroup]="buyForm" (ngSubmit)="onSubmit()" class="justify-content-center">
-   <div class="form-group m-2">
+<form [formGroup]="buyForm" (ngSubmit)="onSubmit()" class="justify-content-center" *ngIf="!errorMessage && !isLoading">
+   <div class="form-group my-2">
       <input 
          type="text" 
          id="symbol" 
          formControlName="symbol" 
-         class="form-control m-2"
+         class="form-control my-2"
          placeholder="Symbol...">
       <input 
          type="number" 
          id="quantity" 
          formControlName="quantity" 
-         class="form-control m-2"
-         placeholder="Shares">
+         class="form-control my-2"
+         placeholder="Shares...">
    </div>
-   <button type="submit" class="btn btn-primary m-2" [disabled]="!buyForm.valid || isLoading">Buy</button> 
+   <button type="submit" class="btn btn-primary my-2" [disabled]="!buyForm.valid || isLoading">Buy</button> 
 </form>
 
 <div *ngIf="errorMessage" class="alert alert-danger" role="alert">

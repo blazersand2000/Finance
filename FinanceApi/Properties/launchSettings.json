@@ -3,7 +3,7 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:51096",
+      "applicationUrl": "http://localhost:4300",
       "sslPort": 0
     }
   },
@@ -15,7 +15,8 @@
       "launchUrl": "weatherforecast",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+      },
+      "nativeDebugging": false
     },
     "FinanceApi": {
       "commandName": "Project",

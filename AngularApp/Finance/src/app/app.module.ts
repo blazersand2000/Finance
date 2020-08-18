@@ -9,7 +9,11 @@ import { HeaderComponent } from './header/header.component';
 import { QuoteComponent } from './quote/quote.component';
 import { HttpClientModule } from '@angular/common/http';
 import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner.component';
-import { BuyComponent } from './buy/buy/buy.component';
+import { BuyComponent } from './portfolio/buy/buy.component';
+import { HistoryComponent } from './portfolio/history/history.component';
+import { PortfolioComponent } from './portfolio/portfolio/portfolio.component';
+import { AbsPipe } from './shared/abs.pipe';
+import { SellComponent } from './portfolio/sell/sell.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +21,11 @@ import { BuyComponent } from './buy/buy/buy.component';
     HeaderComponent,
     QuoteComponent,
     LoadingSpinnerComponent,
-    BuyComponent
+    BuyComponent,
+    HistoryComponent,
+    PortfolioComponent,
+    AbsPipe,
+    SellComponent
   ],
   imports: [
     BrowserModule,

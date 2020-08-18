@@ -1,0 +1,27 @@
+<table class="table" *ngIf="!errorMessage && !isLoading">
+   <thead>
+      <tr>
+         <th scope="col">Symbol</th>
+         <th scope="col">Quantity</th>
+         <th scope="col">Cost Basis</th>
+         <th scope="col">Current Value</th>
+         <th scope="col">Gain/Loss</th>
+      </tr>
+   </thead>
+   <tbody>
+      <tr *ngFor="let position of positions">
+         <td>{{ position.symbol | uppercase }}</td>
+         <td>{{ position.quantity }}</td>
+         <td>{{ position.costBasis | currency:'USD' }}</td>
+         <td>{{ position.currentValue | currency:'USD' }}</td>
+         <td [ngClass]="position.gain > 0 ? 'text-success' : (position.gain < 0 ? 'text-danger' : '') ">{{ position.gain | currency:'USD' }}</td>
+      </tr>
+   </tbody>
+</table>
+
+<div *ngIf="errorMessage" class="alert alert-danger" role="alert">
+   {{ errorMessage }}
+</div>
+<div *ngIf="isLoading">
+   <app-loading-spinner></app-loading-spinner>
+</div>

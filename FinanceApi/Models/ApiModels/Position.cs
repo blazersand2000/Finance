@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace FinanceApi.Models
+namespace FinanceApi.Models.ApiModels
 {
-   public class TransactionResponse
+   public class Position
    {
       [JsonPropertyName("symbol")]
       public string Symbol { get; set; }
@@ -14,7 +14,7 @@ namespace FinanceApi.Models
       public int Quantity { get; set; }
       [JsonPropertyName("costBasis")]
       public decimal CostBasis { get; set; }
-      [JsonPropertyName("timestamp")]
-      public long Timestamp { get; set; }
+      [JsonPropertyName("currentValue")]
+      public decimal CurrentValue { get; set; }
    }
 }

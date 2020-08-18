@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { QuoteService, Quote } from 'src/app/quote/quote.service';
 import { PortfolioService } from 'src/app/shared/portfolio.service';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-buy',
@@ -13,7 +14,9 @@ export class BuyComponent implements OnInit {
   errorMessage: string;
   isLoading: boolean = false;
 
-  constructor(private portfolioService: PortfolioService) { }
+  constructor(private portfolioService: PortfolioService,
+              private router: Router,
+              private route: ActivatedRoute) { }
 
   ngOnInit() {
     this.buyForm = new FormGroup({
@@ -31,6 +34,7 @@ export class BuyComponent implements OnInit {
       buyRes => {
         console.log(buyRes);
         this.errorMessage = null;
+        this.router.navigate(['../'], {relativeTo: this.route});
       },
       error => {
         console.log(error);

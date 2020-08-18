@@ -84,7 +84,7 @@ namespace FinanceApi.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("FinanceApi.Models.TransactionResponse", b =>
+            modelBuilder.Entity("FinanceApi.Models.Transaction", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
