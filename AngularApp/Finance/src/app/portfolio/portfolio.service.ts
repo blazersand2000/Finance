@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { QuoteService } from '../quote/quote.service';
 import { throwError } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -31,7 +32,7 @@ export class PortfolioService {
 
   getHistory() {
     return this.http.get<Transaction[]>(
-      `http://localhost:4300/api/transactions`
+      environment.apiUrl + `transactions`
     )
     .pipe(
       map(transactions => {
@@ -54,7 +55,7 @@ export class PortfolioService {
 
   getPortfolio() {
     return this.http.get<Position[]>(
-      `http://localhost:4300/api/portfolio`
+      environment.apiUrl + `portfolio`
     )
     .pipe(
       map(positions => {

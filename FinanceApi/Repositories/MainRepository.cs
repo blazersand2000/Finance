@@ -9,11 +9,14 @@ using FinanceApi.Exceptions;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Net;
+using System.Text;
 
 namespace FinanceApi.Repositories
 {
    public class MainRepository : IMainRepository
    {
+      private const string TRANSACTION_ENDPOINT = @"https://cs50-finance-9582e.firebaseio.com/transactions.json";
+
       private readonly IHttpClientFactory _clientFactory;
       private readonly HttpClient client;
 
@@ -25,7 +28,7 @@ namespace FinanceApi.Repositories
 
       public IEnumerable<Transaction> GetTransactions()
       {
-         var request = new HttpRequestMessage(HttpMethod.Get, $"https://cs50-finance-9582e.firebaseio.com/transactions.json");
+         var request = new HttpRequestMessage(HttpMethod.Get, TRANSACTION_ENDPOINT);
          var response = SendRequestAsync(request).Result;
 
          if (response.IsSuccessStatusCode)
@@ -105,6 +108,26 @@ namespace FinanceApi.Repositories
          else
          {
             throw new BadRequestException("Could not get quote information.");
+         }
+      }
+
+      public void Transact(Transaction transaction)
+      {
+         var request = new HttpRequestMessage(HttpMethod.Post, TRANSACTION_ENDPOINT);
+         request.Content = new StringContent(JsonConvert.SerializeObject(transaction));
+
+         var response = SendRequestAsync(request).Result;
+
+         if (response.IsSuccessStatusCode)
+         {
+            var jsonObject = JObject.Parse(ReadHttpContentAsync(response.Content).Result);
+            var results = new JArray(jsonObject.Children().Select(p => new JObject(p.Values())));
+            var transactions = results.ToObject<IEnumerable<Transaction>>();
+            return transactions;
+         }
+         else
+         {
+            throw new BadRequestException("Could not fetch transactions.");
          }
       }
 

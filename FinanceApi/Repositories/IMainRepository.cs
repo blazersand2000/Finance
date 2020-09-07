@@ -13,5 +13,6 @@ namespace FinanceApi.Repositories
       IEnumerable<Position> GetPositions();
       QuoteResponse GetQuote(string symbol);
       IEnumerable<QuoteResponse> GetQuotes(IEnumerable<string> symbols);
+      void Transact(Transaction transaction);
    }
 }

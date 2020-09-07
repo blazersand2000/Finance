@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { PortfolioService, Position } from 'src/app/shared/portfolio.service';
+import { PortfolioService, Position } from 'src/app/portfolio/portfolio.service';
 
 @Component({
   selector: 'app-portfolio',

@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { PortfolioService, Position } from 'src/app/shared/portfolio.service';
+import { PortfolioService, Position } from 'src/app/portfolio/portfolio.service';
 
 @Component({
   selector: 'app-sell',

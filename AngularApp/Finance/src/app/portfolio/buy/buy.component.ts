@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { QuoteService, Quote } from 'src/app/quote/quote.service';
-import { PortfolioService } from 'src/app/shared/portfolio.service';
+import { PortfolioService } from 'src/app/portfolio/portfolio.service';
 import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({

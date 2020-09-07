@@ -17,7 +17,7 @@ export class QuoteService {
 
    getQuote(symbol: string) {
       return this.http.get<Quote>(
-         `https://cloud.iexapis.com/stable/stock/${symbol}/quote`, { params: new HttpParams().set('token', environment.iexApiKey) }
+         environment.apiUrl + `quote/${symbol}`
       )
       .pipe(
          catchError((errorResponse: HttpErrorResponse) => {

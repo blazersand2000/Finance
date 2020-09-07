@@ -104,7 +104,7 @@ namespace FinanceApi
 
          FirebaseApp.Create(new AppOptions()
          {
-            Credential = GoogleCredential.FromFile(@"C:\Users\Andrew\Downloads\cs50-finance-9582e-firebase-adminsdk-i9npe-c3f1fe9022.json"),
+            Credential = GoogleCredential.FromFile(Configuration["FirebaseKeyPath"])
          });
 
       }
