@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Net;
 using System.Text;
+using System;
 
 namespace FinanceApi.Repositories
 {
@@ -113,21 +114,22 @@ namespace FinanceApi.Repositories
 
       public void Transact(Transaction transaction)
       {
+         if (transaction.Quantity == 0)
+         {
+            throw new BadRequestException("Cannot transact 0 shares.");
+         }
+
+         transaction.StockPrice = GetQuote(transaction.Symbol).LatestPrice;
+         transaction.Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+         
          var request = new HttpRequestMessage(HttpMethod.Post, TRANSACTION_ENDPOINT);
          request.Content = new StringContent(JsonConvert.SerializeObject(transaction));
 
          var response = SendRequestAsync(request).Result;
 
-         if (response.IsSuccessStatusCode)
+         if (!response.IsSuccessStatusCode)
          {
-            var jsonObject = JObject.Parse(ReadHttpContentAsync(response.Content).Result);
-            var results = new JArray(jsonObject.Children().Select(p => new JObject(p.Values())));
-            var transactions = results.ToObject<IEnumerable<Transaction>>();
-            return transactions;
-         }
-         else
-         {
-            throw new BadRequestException("Could not fetch transactions.");
+            throw new BadRequestException("Could not save transaction.");
          }
       }
 

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using FinanceApi.Repositories;
+using FinanceApi.Models;
 
 namespace FinanceApi.Controllers
 {
@@ -18,6 +19,13 @@ namespace FinanceApi.Controllers
       public IActionResult GetTransactions()
       {
          return Ok(_mainRepository.GetTransactions());
+      }
+
+      [HttpPost]
+      public IActionResult Transact(Transaction transaction)
+      {
+         _mainRepository.Transact(transaction);
+         return Ok();
       }
 
    }

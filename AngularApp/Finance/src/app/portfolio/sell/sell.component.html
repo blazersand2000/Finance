@@ -1,4 +1,4 @@
-<form [formGroup]="sellForm" (ngSubmit)="onSubmit()" class="justify-content-center" *ngIf="!errorMessage && !isLoading">
+<form [formGroup]="sellForm" (ngSubmit)="onSubmit()" class="justify-content-center" *ngIf="!isLoading">
    
    <div class="row justify-content-center">
       <div class="col-3">
@@ -9,7 +9,8 @@
                <option *ngFor="let position of positions" [value]="position.symbol">{{ position.symbol.toUpperCase() }}
                </option>
             </select>
-            <input type="number" min="1" id="quantity" formControlName="quantity" class="form-control my-2" placeholder="Shares..." [class.is-invalid]="quantity.invalid && (quantity.dirty || quantity.touched)">
+            <!-- <input type="number" id="quantity" formControlName="quantity" class="form-control my-2" placeholder="Shares..." [class.is-invalid]="quantity.invalid && (quantity.dirty || quantity.touched)"> -->
+            <input type="number" id="quantity" formControlName="quantity" class="form-control my-2" placeholder="Shares...">
             <span class="form-text" *ngIf="selectedPosition">
                You own {{ selectedPosition.quantity }} shares of {{ selectedPosition.symbol.toUpperCase() }}.
             </span>

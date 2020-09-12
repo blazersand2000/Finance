@@ -16,61 +16,66 @@ export class PortfolioService {
     private quoteService: QuoteService) { }
 
   buyStocks(transaction: { symbol: string, quantity: number }) {
-    return this.quoteService.getQuote(transaction.symbol)
-      .pipe(flatMap(quote => {
-        return this.http
-          .post(
-            this.url + 'transactions.json',
-            {
-              ...transaction,
-              stockPrice: quote.latestPrice,
-              timestamp: Date.now()
-            }
-          );
-      }));
+    return this.http
+      .post(
+        environment.apiUrl + `transactions`,
+        {
+          ...transaction,
+        }
+      )
+      .pipe(
+        catchError((errorResponse: HttpErrorResponse) => {
+          return throwError(errorResponse.error.message)
+        })
+      );
+  }
+
+  sellStocks(transaction: { symbol: string, quantity: number }) {
+    return this.buyStocks({
+      ...transaction,
+      quantity: -1 * transaction.quantity
+    });
   }
 
   getHistory() {
     return this.http.get<Transaction[]>(
       environment.apiUrl + `transactions`
     )
-    .pipe(
-      map(transactions => {
-        return transactions.map(transaction => {
-          return {
-            ...transaction,
-            symbol: transaction.symbol.toUpperCase(),
-            quantity: transaction.quantity,
-            stockPrice: transaction.stockPrice,
-            totalTransactionAmount: transaction.stockPrice * transaction.quantity * -1
-          }
+      .pipe(
+        map(transactions => {
+          return transactions.map(transaction => {
+            return {
+              ...transaction,
+              symbol: transaction.symbol.toUpperCase(),
+              quantity: transaction.quantity,
+              stockPrice: transaction.stockPrice,
+              totalTransactionAmount: transaction.stockPrice * transaction.quantity * -1
+            }
+          })
+        }),
+        catchError((errorResponse: HttpErrorResponse) => {
+          return throwError(errorResponse.error.message)
         })
-      }),
-      catchError((errorResponse: HttpErrorResponse) => {
-        console.log(errorResponse);
-        return throwError("An error occured.")
-      })
-    );
+      );
   }
 
   getPortfolio() {
     return this.http.get<Position[]>(
       environment.apiUrl + `portfolio`
     )
-    .pipe(
-      map(positions => {
-        return positions.map(position => {
-          return {
-            ...position,
-            gain: position.currentValue - position.costBasis
-          }
+      .pipe(
+        map(positions => {
+          return positions.map(position => {
+            return {
+              ...position,
+              gain: position.currentValue - position.costBasis
+            }
+          })
+        }),
+        catchError((errorResponse: HttpErrorResponse) => {
+          return throwError(errorResponse.error.message)
         })
-      }),
-      catchError((errorResponse: HttpErrorResponse) => {
-        console.log(errorResponse);
-        return throwError("An error occured.")
-      })
-    );
+      );
   }
 
 }
