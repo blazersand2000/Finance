@@ -16,5 +16,7 @@ namespace FinanceApi.Models
       public decimal StockPrice { get; set; }
       [JsonPropertyName("timestamp")]
       public long Timestamp { get; set; }
+      [JsonPropertyName("uid")]
+      public string UId { get; set; }
    }
 }

@@ -8,6 +8,9 @@
 		},
 		{
 			"path": "PythonStarterCode"
+		},
+		{
+			"path": "FirebaseFunctions"
 		}
 	],
 	"settings": {}

@@ -27,9 +27,9 @@ namespace FinanceApi.Repositories
          client = _clientFactory.CreateClient();
       }
 
-      public IEnumerable<Transaction> GetTransactions()
+      public IEnumerable<Transaction> GetTransactions(string uid)
       {
-         var request = new HttpRequestMessage(HttpMethod.Get, TRANSACTION_ENDPOINT);
+         var request = new HttpRequestMessage(HttpMethod.Get, $"{TRANSACTION_ENDPOINT}?orderBy=\"UId\"&equalTo=\"{uid}\"");
          var response = SendRequestAsync(request).Result;
 
          if (response.IsSuccessStatusCode)
@@ -45,9 +45,9 @@ namespace FinanceApi.Repositories
          }
       }
 
-      public IEnumerable<Position> GetPositions()
+      public IEnumerable<Position> GetPositions(string uid)
       {
-         var transactions = GetTransactions();
+         var transactions = GetTransactions(uid);
 
          var quotes = GetQuotes(transactions.Select(t => t.Symbol).Distinct());
 

@@ -1,5 +1,7 @@
-﻿using FinanceApi.Repositories;
+﻿using FinanceApi.Authentication;
+using FinanceApi.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace FinanceApi.Controllers
 {
@@ -8,16 +10,19 @@ namespace FinanceApi.Controllers
    public class PortfolioController : ControllerBase
    {
       private readonly IMainRepository _mainRepository;
+      private readonly IUserResolver _userResolver;
 
-      public PortfolioController(IMainRepository mainRepository)
+
+      public PortfolioController(IMainRepository mainRepository, IUserResolver userResolver)
       {
          _mainRepository = mainRepository;
+         _userResolver = userResolver;
       }
 
       [HttpGet]
-      public IActionResult GetPortfolio()
+      public async Task<IActionResult> GetPortfolioAsync(string auth)
       {
-         return Ok(_mainRepository.GetPositions());
+         return Ok(_mainRepository.GetPositions(await _userResolver.GetUserIdFromTokenAsync(auth)));
       }
 
    }

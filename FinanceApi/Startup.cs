@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FinanceApi.Authentication;
 using FinanceApi.Data;
 using FinanceApi.Identity;
 using FinanceApi.Repositories;
@@ -54,6 +55,7 @@ namespace FinanceApi
          });
 
          services.AddScoped<IUserRepository, UserRepository>();
+         services.AddSingleton<IUserResolver, FirebaseUserResolver>();
 
          services.AddHttpClient();
 

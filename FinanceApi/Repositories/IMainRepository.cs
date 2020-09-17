@@ -9,8 +9,8 @@ namespace FinanceApi.Repositories
 {
    public interface IMainRepository
    {
-      IEnumerable<Transaction> GetTransactions();
-      IEnumerable<Position> GetPositions();
+      IEnumerable<Transaction> GetTransactions(string uid);
+      IEnumerable<Position> GetPositions(string uid);
       QuoteResponse GetQuote(string symbol);
       IEnumerable<QuoteResponse> GetQuotes(IEnumerable<string> symbols);
       void Transact(Transaction transaction);
