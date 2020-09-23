@@ -2,7 +2,7 @@
    <thead>
       <tr>
          <th scope="col">Date</th>
-         <th scope="col">Buy/Sell</th>
+         <th scope="col">Transaction</th>
          <th scope="col">Symbol</th>
          <th scope="col">Quantity</th>
          <th scope="col">Stock Price</th>
@@ -12,10 +12,10 @@
    <tbody>
       <tr *ngFor="let transaction of transactions">
          <td>{{ transaction.timestamp | date:'short' }}</td>
-         <td [ngClass]="transaction.quantity < 0 ? 'text-success' : 'text-danger' ">{{ (transaction.quantity < 0 ? 'Sell' : 'Buy') }}</td>
-         <td>{{ transaction.symbol | uppercase }}</td>
-         <td>{{ transaction.quantity | abs }}</td>
-         <td>{{ transaction.stockPrice | currency:'USD' }}</td>
+         <td [ngClass]="transaction.quantity < 0 ? 'text-success' : 'text-danger' ">{{ (transaction.quantity < 0 ? (transaction.symbol == 'DEPOSIT' ? 'Deposit' : 'Sell') : 'Buy') }}</td>
+         <td>{{ (transaction.symbol == 'DEPOSIT' ? '-' : (transaction.symbol | uppercase)) }}</td>
+         <td>{{ (transaction.symbol == 'DEPOSIT' ? '-' : (transaction.quantity | abs)) }}</td>
+         <td>{{ (transaction.symbol == 'DEPOSIT' ? '-' : (transaction.stockPrice | currency:'USD')) }}</td>
          <td [ngClass]="transaction.quantity < 0 ? 'text-success' : 'text-danger' ">{{ transaction.totalTransactionAmount | currency:'USD' }}</td>
       </tr>
    </tbody>

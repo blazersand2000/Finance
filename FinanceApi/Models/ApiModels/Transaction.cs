@@ -1,22 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
+﻿using Newtonsoft.Json;
 
 namespace FinanceApi.Models
 {
    public class Transaction
    {
-      [JsonPropertyName("symbol")]
+      [JsonProperty("symbol")]
       public string Symbol { get; set; }
-      [JsonPropertyName("quantity")]
+      [JsonProperty("quantity")]
       public int Quantity { get; set; }
-      [JsonPropertyName("stockPrice")]
+      [JsonProperty("stockPrice")]
       public decimal StockPrice { get; set; }
-      [JsonPropertyName("timestamp")]
+      [JsonProperty("timestamp")]
       public long Timestamp { get; set; }
-      [JsonPropertyName("uid")]
+      [JsonProperty("uid")]
       public string UId { get; set; }
    }
 }

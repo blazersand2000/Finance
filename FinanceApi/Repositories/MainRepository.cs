@@ -17,6 +17,7 @@ namespace FinanceApi.Repositories
    public class MainRepository : IMainRepository
    {
       private const string TRANSACTION_ENDPOINT = @"https://cs50-finance-9582e.firebaseio.com/transactions.json";
+      private const string DEPOSIT_SYMBOL = "DEPOSIT";
 
       private readonly IHttpClientFactory _clientFactory;
       private readonly HttpClient client;
@@ -29,7 +30,7 @@ namespace FinanceApi.Repositories
 
       public IEnumerable<Transaction> GetTransactions(string uid)
       {
-         var request = new HttpRequestMessage(HttpMethod.Get, $"{TRANSACTION_ENDPOINT}?orderBy=\"UId\"&equalTo=\"{uid}\"");
+         var request = new HttpRequestMessage(HttpMethod.Get, $"{TRANSACTION_ENDPOINT}?orderBy=\"uid\"&equalTo=\"{uid}\"");
          var response = SendRequestAsync(request).Result;
 
          if (response.IsSuccessStatusCode)
@@ -49,7 +50,7 @@ namespace FinanceApi.Repositories
       {
          var transactions = GetTransactions(uid);
 
-         var quotes = GetQuotes(transactions.Select(t => t.Symbol).Distinct());
+         var quotes = GetQuotes(transactions.Where(t => t.Symbol.ToUpper() != DEPOSIT_SYMBOL).Select(t => t.Symbol).Distinct());
 
          var portfolio = transactions
             .GroupBy(g => g.Symbol)
@@ -58,7 +59,8 @@ namespace FinanceApi.Repositories
                Symbol = g.Key,
                Quantity = g.Sum(q => q.Quantity),
                CostBasis = g.Sum(c => c.Quantity * c.StockPrice),
-               CurrentValue = g.Sum(q => q.Quantity) * quotes.FirstOrDefault(q => q.Symbol.ToUpper() == g.Key.ToUpper()).LatestPrice
+               CurrentValue = g.Key.ToUpper() == DEPOSIT_SYMBOL ? g.Sum(v => v.StockPrice) - transactions.Where(t => t.Symbol.ToUpper() != DEPOSIT_SYMBOL).Sum(s => s.Quantity * s.StockPrice)
+               : g.Sum(q => q.Quantity) * quotes.FirstOrDefault(q => q.Symbol.ToUpper() == g.Key.ToUpper()).LatestPrice
             })
             .Where(s => s.Quantity != 0);
 

@@ -10,11 +10,11 @@
    </thead>
    <tbody>
       <tr *ngFor="let position of positions">
-         <td>{{ position.symbol | uppercase }}</td>
-         <td>{{ position.quantity }}</td>
-         <td>{{ position.costBasis | currency:'USD' }}</td>
+         <td>{{ (position.symbol == 'deposit' ? 'CASH' : position.symbol) | uppercase }}</td>
+         <td>{{ (position.symbol == 'deposit' ? '-' : position.quantity) }}</td>
+         <td>{{ (position.symbol == 'deposit' ? '-' : position.costBasis | currency:'USD') }}</td>
          <td>{{ position.currentValue | currency:'USD' }}</td>
-         <td [ngClass]="position.gain > 0 ? 'text-success' : (position.gain < 0 ? 'text-danger' : '') ">{{ position.gain | currency:'USD' }}</td>
+         <td [ngClass]="position.gain > 0 ? 'text-success' : (position.gain < 0 ? 'text-danger' : '') ">{{ (position.symbol == 'deposit' ? '-' : position.gain | currency:'USD') }}</td>
       </tr>
    </tbody>
 </table>

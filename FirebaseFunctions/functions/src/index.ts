@@ -14,9 +14,10 @@ admin.initializeApp();
 export const depositInitialCashOnUserSignup = functions.auth.user().onCreate(user => {
    const transactionsRef = admin.database().ref('transactions');
    return transactionsRef.push({
-      quantity : -1,
-      stockPrice : 10000,
-      symbol : 'deposit',
-      timestamp : Date.now()
+      quantity: -1,
+      stockPrice: 10000,
+      symbol: 'deposit',
+      timestamp: Date.now(),
+      uid: user.uid
     });
 });

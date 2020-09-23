@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
+﻿using Newtonsoft.Json;
 
 namespace FinanceApi.Models
 {
    public class QuoteResponse
    {
-      [JsonPropertyName("companyName")]
+      [JsonProperty("companyName")]
       public string CompanyName { get; set; }
-      [JsonPropertyName("latestPrice")]
+      [JsonProperty("latestPrice")]
       public decimal LatestPrice { get; set; }
-      [JsonPropertyName("symbol")]
+      [JsonProperty("symbol")]
       public string Symbol { get; set; }
    }
 }

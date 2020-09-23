@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Newtonsoft.Json;
 using System.Net;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace FinanceApi.Models.ApiModels
 {
    public class Error
    {
-      [JsonPropertyName("httpStatusCode")]
+      [JsonProperty("httpStatusCode")]
       public HttpStatusCode HttpStatusCode { get; set; }
-      [JsonPropertyName("message")]
+      [JsonProperty("message")]
       public string Message { get; set; }
    }
 }

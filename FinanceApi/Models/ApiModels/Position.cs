@@ -1,20 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
+﻿using Newtonsoft.Json;
 
 namespace FinanceApi.Models.ApiModels
 {
    public class Position
    {
-      [JsonPropertyName("symbol")]
+      [JsonProperty("symbol")]
       public string Symbol { get; set; }
-      [JsonPropertyName("quantity")]
+      [JsonProperty("quantity")]
       public int Quantity { get; set; }
-      [JsonPropertyName("costBasis")]
+      [JsonProperty("costBasis")]
       public decimal CostBasis { get; set; }
-      [JsonPropertyName("currentValue")]
+      [JsonProperty("currentValue")]
       public decimal CurrentValue { get; set; }
    }
 }

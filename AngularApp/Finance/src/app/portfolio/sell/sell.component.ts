@@ -41,7 +41,7 @@ export class SellComponent implements OnInit {
       .subscribe(
         response => {
           //console.log(response);
-          this.positions = response.sort();
+          this.positions = response.filter((position) => position.symbol.toUpperCase() != "DEPOSIT").sort();
           this.errorMessage = null;
         },
         error => {

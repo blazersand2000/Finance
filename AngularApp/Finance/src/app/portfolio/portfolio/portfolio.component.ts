@@ -24,7 +24,7 @@ export class PortfolioComponent implements OnInit {
     .subscribe(
       response => {
         console.log(response);
-        this.positions = response.sort();
+        this.positions = this.sortPositions(response);
         this.errorMessage = null;
       },
       error => {
@@ -35,7 +35,12 @@ export class PortfolioComponent implements OnInit {
       this.isLoading = false;
     });
     
+  }
 
+  private sortPositions(positions: Position[]): Position[] {
+    const cashElement = positions.splice(positions.findIndex((p) => p.symbol.toUpperCase() == "DEPOSIT"), 1)[0];
+    positions.push(cashElement);
+    return positions;
   }
 
 }
