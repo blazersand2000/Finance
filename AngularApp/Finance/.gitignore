@@ -44,3 +44,7 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+
+# Environment variables files which contain secrets
+environment.prod.ts
+environment.ts
