@@ -26,9 +26,13 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptorService } from './auth/auth-interceptor.service';
 import { AuthComponent } from './auth/auth.component';
 import { PlaceholderDirective } from './shared/placeholder/placeholder.directive';
+import { AlertComponent } from './shared/alert/alert.component';
+import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
+    AlertComponent,
     AppComponent,
     HeaderComponent,
     QuoteComponent,
@@ -50,7 +54,12 @@ import { PlaceholderDirective } from './shared/placeholder/placeholder.directive
     StoreRouterConnectingModule.forRoot(),
     HttpClientModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    TypeaheadModule.forRoot(),
+    BrowserAnimationsModule
+  ],
+  entryComponents: [
+    AlertComponent
   ],
   providers: [
     {

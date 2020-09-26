@@ -9,7 +9,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class PortfolioService {
-  private readonly url = "https://cs50-finance-9582e.firebaseio.com/";
+  private readonly unknownErrorMessage = "Connection error."
 
   constructor(
     private http: HttpClient,
@@ -25,7 +25,7 @@ export class PortfolioService {
       )
       .pipe(
         catchError((errorResponse: HttpErrorResponse) => {
-          return throwError(errorResponse.error.message)
+          return throwError(errorResponse.error.message || this.unknownErrorMessage)
         })
       );
   }
@@ -54,7 +54,7 @@ export class PortfolioService {
           })
         }),
         catchError((errorResponse: HttpErrorResponse) => {
-          return throwError(errorResponse.error.message)
+          return throwError(errorResponse.error.message || this.unknownErrorMessage)
         })
       );
   }
@@ -73,7 +73,8 @@ export class PortfolioService {
           })
         }),
         catchError((errorResponse: HttpErrorResponse) => {
-          return throwError(errorResponse.error.message)
+          console.log(errorResponse);
+          return throwError(errorResponse.error.message || this.unknownErrorMessage)
         })
       );
   }

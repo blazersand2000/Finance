@@ -1,5 +1,5 @@
 import { Actions, ofType, Effect } from '@ngrx/effects';
-import { switchMap, catchError, map, tap, delay } from 'rxjs/operators';
+import { switchMap, catchError, map, tap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { of } from 'rxjs';
@@ -42,6 +42,7 @@ const handleAuthentication = (
 };
 
 const handleError = (errorRes: any) => {
+   console.log(errorRes);
    let errorMessage = 'An unknown error occurred.'
    if (!errorRes.error || !errorRes.error.error) {
       return of(new AuthActions.AuthenticateFail(errorMessage));
@@ -89,7 +90,7 @@ export class AuthEffects {
                password: signupAction.payload.password,
                returnSecureToken: true
             }
-         ).pipe(delay(1000),
+         ).pipe(
             tap(resData => {
                this.authService.setLogoutTimer(+resData.expiresIn * 1000)
             }),
@@ -115,7 +116,7 @@ export class AuthEffects {
                password: authData.payload.password,
                returnSecureToken: true
             }
-         ).pipe(delay(1000),
+         ).pipe(
             tap(resData => {
                this.authService.setLogoutTimer(+resData.expiresIn * 1000)
             }),

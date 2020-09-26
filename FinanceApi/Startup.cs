@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FinanceApi.Authentication;
-using FinanceApi.Data;
-using FinanceApi.Identity;
 using FinanceApi.Repositories;
 using FirebaseAdmin;
 using FirebaseAdmin.Auth;
@@ -39,22 +37,6 @@ namespace FinanceApi
       {
          services.AddControllers();
 
-         services.AddDbContext<FinanceContext>(options =>
-           options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-
-         services.AddIdentity<AppUser, IdentityRole>()
-           .AddEntityFrameworkStores<FinanceContext>();
-         var identityBuilder = services.AddIdentityCore<AppUser>(o =>
-         {
-            // configure identity options
-            o.Password.RequireDigit = false;
-            o.Password.RequireLowercase = false;
-            o.Password.RequireUppercase = false;
-            o.Password.RequireNonAlphanumeric = false;
-            o.Password.RequiredLength = 6;
-         });
-
-         services.AddScoped<IUserRepository, UserRepository>();
          services.AddSingleton<IUserResolver, FirebaseUserResolver>();
 
          services.AddHttpClient();
@@ -98,15 +80,9 @@ namespace FinanceApi
          });
 
 
-         using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
-         {
-            var context = serviceScope.ServiceProvider.GetRequiredService<FinanceContext>();
-            context.Database.Migrate();
-         }
-
          FirebaseApp.Create(new AppOptions()
          {
-            Credential = GoogleCredential.FromFile(Configuration["FirebaseKeyPath"])
+            Credential = GoogleCredential.FromFile(Configuration["FirebaseKey"])
          });
 
       }

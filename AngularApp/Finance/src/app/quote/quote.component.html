@@ -1,7 +1,6 @@
-<!-- <div>
-   <input #symbolInput type="text" placeholder="Symbol..." [disabled]="isLoading">
-   <button type="submit" (click)="handleGetQuoteClick()" [disabled]="isLoading">Get Quote</button>
-</div> -->
+<div class="mb-4">
+   <h3>Real-Time Stock Quote</h3>
+</div>
 <form [formGroup]="quoteForm" (ngSubmit)="handleGetQuoteClick()" class="form-inline justify-content-center">
    <div class="form-group m-2">
       <input type="text" id="symbol" formControlName="symbol" class="form-control"

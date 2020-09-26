@@ -89,6 +89,11 @@ namespace FinanceApi.Repositories
 
       public IEnumerable<QuoteResponse> GetQuotes(IEnumerable<string> symbols)
       {
+         if (symbols == null || symbols.Count() == 0)
+         {
+            return new List<QuoteResponse>();
+         }
+
          symbols = symbols.Select(s => s.ToUpper());
          
          var request = new HttpRequestMessage(HttpMethod.Get, $"https://cloud-sse.iexapis.com/stable/stock/market/batch?types=quote&symbols={string.Join(',', symbols)}&token=pk_e6e13c11832440cabe357ff621e7f404");
@@ -121,7 +126,33 @@ namespace FinanceApi.Repositories
             throw new BadRequestException("Cannot transact 0 shares.");
          }
 
+         var portfolio = GetPositions(transaction.UId);
          transaction.StockPrice = GetQuote(transaction.Symbol).LatestPrice;
+
+         //buying
+         if (transaction.Quantity > 0)
+         {
+            if (!portfolio.Any(p => p.Symbol.ToUpper() == DEPOSIT_SYMBOL) || portfolio.First(p => p.Symbol.ToUpper() == DEPOSIT_SYMBOL).CurrentValue < (transaction.StockPrice * transaction.Quantity))
+            {
+               throw new BadRequestException("User cannot afford.");
+            }
+         }
+         //selling
+         if (transaction.Quantity < 0)
+         {
+            if (!portfolio.Any(p => p.Symbol == transaction.Symbol))
+            {
+               throw new BadRequestException($"User does not own any shares of {transaction.Symbol.ToUpper()}.");
+            }
+            var ownedQuantity = portfolio.First(p => p.Symbol == transaction.Symbol).Quantity;
+            if (ownedQuantity < Math.Abs(transaction.Quantity))
+            {
+               throw new BadRequestException($"Cannot sell {Math.Abs(transaction.Quantity)} shares of {transaction.Symbol.ToUpper()}; user only owns {ownedQuantity} shares.");
+            }
+         }
+
+
+
          transaction.Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
          
          var request = new HttpRequestMessage(HttpMethod.Post, TRANSACTION_ENDPOINT);

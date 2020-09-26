@@ -23,7 +23,6 @@ export class PortfolioComponent implements OnInit {
     this.portfolioService.getPortfolio()
     .subscribe(
       response => {
-        console.log(response);
         this.positions = this.sortPositions(response);
         this.errorMessage = null;
       },
