@@ -14,5 +14,6 @@ namespace FinanceApi.Repositories
       QuoteResponse GetQuote(string symbol);
       IEnumerable<QuoteResponse> GetQuotes(IEnumerable<string> symbols);
       void Transact(Transaction transaction);
+      SymbolListResponse GetSymbols();
    }
 }

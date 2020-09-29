@@ -5,6 +5,7 @@ import { map } from 'rxjs/operators';
 
 import * as fromApp from '../store/app.reducer';
 import * as AuthActions from '../auth/store/auth.actions';
+import { QuoteService } from '../quote/quote.service';
 
 @Component({
   selector: 'app-header',
@@ -14,8 +15,10 @@ import * as AuthActions from '../auth/store/auth.actions';
 export class HeaderComponent implements OnInit, OnDestroy {
   authenticatedUser = null;
   private userSub: Subscription;
+  private symbolSub: Subscription;
 
-  constructor(private store: Store<fromApp.AppState>) { }
+  constructor(private store: Store<fromApp.AppState>,
+              private quoteService: QuoteService) { }
 
   ngOnInit() {
     this.userSub = this.store
@@ -24,6 +27,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
       .subscribe(user => {
         this.authenticatedUser = user;
       });
+
+    this.symbolSub = this.quoteService.updateCachedSymbolsIfNeeded()
+      .subscribe();
   }
 
   onLogout() {
@@ -32,6 +38,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.userSub.unsubscribe();
+    this.symbolSub.unsubscribe();
   }
 
 }

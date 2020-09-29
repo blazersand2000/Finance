@@ -33,3 +33,18 @@
 <div *ngIf="isLoading">
    <app-loading-spinner></app-loading-spinner>
 </div>
+
+
+<ng-template #customItemTemplate let-model="item" let-index="index">
+   <h5>{{model.symbol}} - {{ model.companyName }}</h5>
+ </ng-template>
+
+<pre class="card card-block card-header mb-3">Model: {{selected | json}}</pre>
+<input [(ngModel)]="selected"
+       [typeahead]="symbols"
+       typeaheadOptionField="prettyPrinted"
+       [adaptivePosition]="true"
+       [typeaheadItemTemplate]="customItemTemplate"
+       [typeaheadOptionsLimit]=10
+       (typeaheadOnSelect)="onSelect($event)"
+       class="form-control">

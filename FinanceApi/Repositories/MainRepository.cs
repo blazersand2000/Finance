@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using System.Net;
 using System.Text;
 using System;
+using Microsoft.Extensions.Configuration;
 
 namespace FinanceApi.Repositories
 {
@@ -21,11 +22,13 @@ namespace FinanceApi.Repositories
 
       private readonly IHttpClientFactory _clientFactory;
       private readonly HttpClient client;
+      private readonly IConfiguration _configuration;
 
-      public MainRepository(IHttpClientFactory clientFactory)
+      public MainRepository(IHttpClientFactory clientFactory, IConfiguration configuration)
       {
          _clientFactory = clientFactory;
          client = _clientFactory.CreateClient();
+         _configuration = configuration;
       }
 
       public IEnumerable<Transaction> GetTransactions(string uid)
@@ -69,7 +72,7 @@ namespace FinanceApi.Repositories
 
       public QuoteResponse GetQuote(string symbol)
       {
-         var request = new HttpRequestMessage(HttpMethod.Get, $"https://cloud-sse.iexapis.com/stable/stock/{symbol}/quote?token=pk_e6e13c11832440cabe357ff621e7f404");
+         var request = new HttpRequestMessage(HttpMethod.Get, $"https://cloud-sse.iexapis.com/stable/stock/{symbol}/quote?token={_configuration["IexKey"]}");
          var response = SendRequestAsync(request).Result;
 
          if (response.IsSuccessStatusCode)
@@ -95,8 +98,8 @@ namespace FinanceApi.Repositories
          }
 
          symbols = symbols.Select(s => s.ToUpper());
-         
-         var request = new HttpRequestMessage(HttpMethod.Get, $"https://cloud-sse.iexapis.com/stable/stock/market/batch?types=quote&symbols={string.Join(',', symbols)}&token=pk_e6e13c11832440cabe357ff621e7f404");
+
+         var request = new HttpRequestMessage(HttpMethod.Get, $"https://cloud-sse.iexapis.com/stable/stock/market/batch?types=quote&symbols={string.Join(',', symbols)}&token={_configuration["IexKey"]}");
          var response = SendRequestAsync(request).Result;
 
          if (response.IsSuccessStatusCode)
@@ -151,10 +154,8 @@ namespace FinanceApi.Repositories
             }
          }
 
-
-
          transaction.Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-         
+
          var request = new HttpRequestMessage(HttpMethod.Post, TRANSACTION_ENDPOINT);
          request.Content = new StringContent(JsonConvert.SerializeObject(transaction));
 
@@ -165,6 +166,27 @@ namespace FinanceApi.Repositories
             throw new BadRequestException("Could not save transaction.");
          }
       }
+
+      public SymbolListResponse GetSymbols()
+      {
+         var request = new HttpRequestMessage(HttpMethod.Get, $"https://cloud.iexapis.com/beta/ref-data/symbols?token={_configuration["IexKey"]}");
+         var response = SendRequestAsync(request).Result;
+
+         if (response.IsSuccessStatusCode)
+         {
+            var jsonArray = JArray.Parse(ReadHttpContentAsync(response.Content).Result);
+            return new SymbolListResponse()
+            {
+               Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
+               Symbols = jsonArray.Select(s => new SymbolDetail() { Symbol = (s as JObject).Value<string>("symbol"), CompanyName = (s as JObject).Value<string>("name") })
+            };
+         }
+         else
+         {
+            throw new BadRequestException("Could not get symbol information.");
+         }
+      }
+
 
       private async Task<HttpResponseMessage> SendRequestAsync(HttpRequestMessage request)
       {
