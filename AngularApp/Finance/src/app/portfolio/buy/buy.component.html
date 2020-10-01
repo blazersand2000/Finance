@@ -8,13 +8,24 @@
          id="symbol" 
          formControlName="symbol" 
          class="form-control my-2"
-         placeholder="Symbol...">
+         placeholder="Symbol/Company..."
+         autocomplete="off"
+         [(ngModel)]="selected"
+         [typeahead]="symbols"
+         typeaheadOptionField="prettyPrinted"
+         [adaptivePosition]="true"
+         [typeaheadItemTemplate]="customItemTemplate"
+         [typeaheadOptionsLimit]=10
+         (typeaheadOnSelect)="onSelect($event)">
       <input 
          type="number" 
          id="quantity" 
          formControlName="quantity" 
          class="form-control my-2"
          placeholder="Shares...">
+   </div>
+   <div class="row justify-content-center" style="height: 40px;">
+      <span>{{ currentlySelectedCompanyName }}</span>
    </div>
    <button type="submit" class="btn btn-primary my-2" [disabled]="!buyForm.valid || isLoading">Buy</button> 
 </form>
@@ -25,3 +36,7 @@
 <div *ngIf="isLoading">
    <app-loading-spinner></app-loading-spinner>
 </div>
+
+<ng-template #customItemTemplate let-model="item" let-index="index">
+   {{model.symbol}} - {{ model.companyName }}
+</ng-template>

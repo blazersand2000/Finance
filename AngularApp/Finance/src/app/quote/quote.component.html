@@ -3,29 +3,46 @@
 </div>
 <form [formGroup]="quoteForm" (ngSubmit)="handleGetQuoteClick()" class="form-inline justify-content-center">
    <div class="form-group m-2">
-      <input type="text" id="symbol" formControlName="symbol" class="form-control"
-         placeholder="Symbol">
+      <input 
+         type="text" 
+         id="symbol" 
+         formControlName="symbol" 
+         class="form-control"
+         autocomplete="off"
+         [(ngModel)]="selected"
+         [typeahead]="symbols"
+         typeaheadOptionField="prettyPrinted"
+         [adaptivePosition]="true"
+         [typeaheadItemTemplate]="customItemTemplate"
+         [typeaheadOptionsLimit]=10
+         (typeaheadOnSelect)="onSelect($event)">
    </div>
    <button type="submit" class="btn btn-primary m-2" [disabled]="!quoteForm.valid || isLoading">Get Quote</button> 
 </form>
 
-<div *ngIf="quote && !errorMessage && !isLoading" class="text-left">
-   <table class="table table-sm table-borderless text-left">
-      <tbody>
-         <tr>
-            <th scope="row">Company:</th>
-            <td>{{ quote.companyName }}</td>
-         </tr>
-         <tr>
-            <th scope="row">Symbol:</th>
-            <td>{{ quote.symbol }}</td>
-         </tr>
-         <tr>
-            <th scope="row">Latest Price:</th>
-            <td>{{ quote.latestPrice | currency:'USD' }}</td>
-         </tr>
-      </tbody>
-   </table>
+<div class="row justify-content-center" style="height: 40px;">
+   <span>{{ currentlySelectedCompanyName }}</span>
+</div>
+
+<div *ngIf="quote && !errorMessage && !isLoading" class="row text-left justify-content-center">
+   <div class="col">
+      <table class="table text-left table-sm">
+         <tbody>
+            <tr>
+               <th scope="row">Company:</th>
+               <td class="text-right">{{ quote.companyName }}</td>
+            </tr>
+            <tr>
+               <th scope="row">Symbol:</th>
+               <td class="text-right">{{ quote.symbol }}</td>
+            </tr>
+            <tr>
+               <th scope="row">Latest Price:</th>
+               <td class="text-right">{{ quote.latestPrice | currency:'USD' }}</td>
+            </tr>
+         </tbody>
+      </table>
+   </div>
 </div>
 <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
    {{ errorMessage }}
@@ -34,17 +51,6 @@
    <app-loading-spinner></app-loading-spinner>
 </div>
 
-
 <ng-template #customItemTemplate let-model="item" let-index="index">
-   <h5>{{model.symbol}} - {{ model.companyName }}</h5>
- </ng-template>
-
-<pre class="card card-block card-header mb-3">Model: {{selected | json}}</pre>
-<input [(ngModel)]="selected"
-       [typeahead]="symbols"
-       typeaheadOptionField="prettyPrinted"
-       [adaptivePosition]="true"
-       [typeaheadItemTemplate]="customItemTemplate"
-       [typeaheadOptionsLimit]=10
-       (typeaheadOnSelect)="onSelect($event)"
-       class="form-control">
+   {{model.symbol}} - {{ model.companyName }}
+</ng-template>

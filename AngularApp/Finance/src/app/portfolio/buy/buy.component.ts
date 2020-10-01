@@ -3,6 +3,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { QuoteService, Quote } from 'src/app/quote/quote.service';
 import { PortfolioService } from 'src/app/portfolio/portfolio.service';
 import { Router, ActivatedRoute } from '@angular/router';
+import { TypeaheadMatch } from 'ngx-bootstrap/typeahead';
 
 @Component({
   selector: 'app-buy',
@@ -14,16 +15,28 @@ export class BuyComponent implements OnInit {
   errorMessage: string;
   isLoading: boolean = false;
 
+  selected: string;
+  symbols: {symbol: string, companyName: string, prettyPrinted: string}[];
+
+  get currentlySelectedCompanyName(): string {
+    return this.symbols.find(symbol => symbol.symbol.toUpperCase() === this.selected?.toUpperCase())?.companyName ?? "";
+  }
+
   constructor(private portfolioService: PortfolioService,
               private router: Router,
-              private route: ActivatedRoute) { }
+              private route: ActivatedRoute,
+              private quoteService: QuoteService) { }
 
   ngOnInit() {
+    this.symbols = this.quoteService.getCachedSymbols().symbols.map(symbolDetail => {return {...symbolDetail, prettyPrinted: symbolDetail.symbol + ' ' + symbolDetail.companyName}});
     this.buyForm = new FormGroup({
       symbol: new FormControl({value: '', disabled: this.isLoading}, Validators.required),
       quantity: new FormControl({value: '', disabled: this.isLoading}, Validators.required),
     });
-
+  }
+  
+  onSelect(event: TypeaheadMatch): void {
+    this.selected = event.item.symbol;
   }
 
   onSubmit() {
