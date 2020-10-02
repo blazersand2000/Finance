@@ -3,31 +3,65 @@
 </div>
 <form [formGroup]="buyForm" (ngSubmit)="onSubmit()" class="justify-content-center" *ngIf="!isLoading">
    <div class="form-group my-2">
-      <input 
-         type="text" 
-         id="symbol" 
-         formControlName="symbol" 
-         class="form-control my-2"
-         placeholder="Symbol/Company..."
-         autocomplete="off"
-         [(ngModel)]="selected"
-         [typeahead]="symbols"
-         typeaheadOptionField="prettyPrinted"
-         [adaptivePosition]="true"
-         [typeaheadItemTemplate]="customItemTemplate"
-         [typeaheadOptionsLimit]=10
-         (typeaheadOnSelect)="onSelect($event)">
-      <input 
-         type="number" 
-         id="quantity" 
-         formControlName="quantity" 
-         class="form-control my-2"
-         placeholder="Shares...">
+      <input type="text" id="symbol" formControlName="symbol" class="form-control my-2" placeholder="Symbol/Company..."
+         autocomplete="off" [(ngModel)]="selected" [typeahead]="symbols" typeaheadOptionField="prettyPrinted"
+         [adaptivePosition]="true" [typeaheadItemTemplate]="customItemTemplate" [typeaheadOptionsLimit]=10
+         (typeaheadOnSelect)="onSelect($event)" (ngModelChange)="onSymbolValueChange()">
+      <input type="number" id="quantity" formControlName="quantity" class="form-control my-2" placeholder="Shares..."
+         [(ngModel)]="quantity">
    </div>
-   <div class="row justify-content-center" style="height: 40px;">
-      <span>{{ currentlySelectedCompanyName }}</span>
+
+   <div class="row justify-content-center" style="min-height: 190px;">
+      <div class="card text-center text-white bg-dark mb-3" style="width: 24rem;">
+         <div class="card-header" style="min-height: 50px;">{{ currentlySelectedCompanyName }}</div>
+         <div class="card-body" *ngIf="cashAvailable && currentPrice && !isCardLoading && quantity">
+
+            <div class="row">
+               <div class="col text-left">
+                  
+               </div>
+               <div class="col text-right">
+                  {{ selected }} | {{ currentPrice | currency:'USD' }} / share
+               </div>
+            </div>
+            <div class="row">
+               <div class="col text-left">
+                  x
+               </div>
+               <div class="col text-right">
+                  {{ quantity }}
+               </div>
+            </div>
+            <div class="row">
+               <div class="col text-left">
+                  =
+               </div>
+               <div class="col text-right font-weight-bold">
+                  {{ currentPrice * quantity | currency: 'USD' }}
+               </div>
+            </div>
+            <hr>
+            <div class="row my-2">
+               <div class="col text-left">
+                  Available cash
+               </div>
+               <div class="col text-right" [ngClass]="currentPrice * quantity > cashAvailable ? 'text-danger' : '' ">
+                  {{ cashAvailable | currency: 'USD' }}
+               </div>
+            </div>
+
+         </div>
+         <div class="container h-100" *ngIf="isCardLoading">
+            <div class="d-flex align-items-center h-100 justify-content-center row">
+               <div class="spinner-border text-secondary" role="status">
+                  <span class="sr-only">Loading...</span>
+               </div>
+            </div>
+         </div>
+      </div>
    </div>
-   <button type="submit" class="btn btn-primary my-2" [disabled]="!buyForm.valid || isLoading">Buy</button> 
+
+   <button type="submit" class="btn btn-primary my-2" [disabled]="!buyForm.valid || isLoading">Buy</button>
 </form>
 
 <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
